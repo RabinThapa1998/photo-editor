@@ -7,9 +7,9 @@
         <style>
             .image-container {
                 position: relative;
-                width: 500px;
+                width: 400px;
                 height: 500px;
-                border: 1px solid black;
+                overflow: hidden;
             }
 
             .image-container img {
@@ -30,18 +30,20 @@
         </style>
     </head>
     <body>
-        <button onclick="downloadImage()">Download Image</button>
         <input
             type="file"
             id="imageInput"
             accept="image/*"
             onchange="getImageSize()"
         />
+        <input type="text" id="overlay-text-input" />
 
         <div class="image-container">
             <img alt="Your Image" id="editable-img" />
-            <div class="overlay-text">Your Overlay Text</div>
+            <div class="overlay-text" id="overlay-text"></div>
         </div>
+
+        <button onclick="downloadImage()">Download Image</button>
 
         <script>
             var canvas;
@@ -57,8 +59,12 @@
                     context.font = '24px bold';
                     context.fillStyle = 'white';
                     context.textAlign = 'center';
+                    const overlayText = document.querySelector(
+                        '#overlay-text-input'
+                    ).value;
+
                     context.fillText(
-                        'Your Overlay Text',
+                        overlayText,
                         canvas.width / 2,
                         canvas.height / 2
                     );
@@ -84,28 +90,47 @@
                             var width = img.width;
                             var height = img.height;
 
+                            // Calculate the aspect ratio of the original image
+                            var aspectRatio = width / height;
+
                             const canvasImgElement =
                                 document.querySelector('#editable-img');
                             canvasImgElement.src = e.target.result;
-                            canvasImgElement.style.width = width + 'px';
-                            canvasImgElement.style.height = height + 'px';
 
+                            // Calculate the new width and height for the canvas
+                            var newWidth, newHeight;
+                            if (aspectRatio > 1) {
+                                newWidth = 400;
+                                newHeight = 400 / aspectRatio;
+                            } else {
+                                newWidth = 500 * aspectRatio;
+                                newHeight = 500;
+                            }
+
+                            canvasImgElement.style.width = newWidth + 'px';
+                            canvasImgElement.style.height = newHeight + 'px';
+
+                            // Create a canvas with new dimensions
                             canvas = document.createElement('canvas');
-                            // canvas.onload = function () {
                             canvas.width = width;
                             canvas.height = height;
-                            // };
 
-                            // Set the global canvasImg.src
                             canvasImg.src = e.target.result;
-                            canvasImg.height = height;
-                            canvasImg.width = width;
                         };
                     };
 
                     reader.readAsDataURL(input.files[0]);
                 }
             }
+
+            const inputHandler = function (e) {
+                console.log('🚀 ~ inputHandler ~ e:', e);
+                // result.innerText = e.target.value;
+                document.querySelector('#overlay-text').innerText =
+                    e.target.value;
+            };
+            const overlayInput = document.querySelector('#overlay-text-input');
+            overlayInput.addEventListener('input', (e) => inputHandler(e));
         </script>
     </body>
 </html>
