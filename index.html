@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Image with Overlay Text</title>
+        <style>
+            .image-container {
+                position: relative;
+                /* width: 300px; */
+            }
+
+            .image-container img {
+                width: 100%;
+                height: auto;
+            }
+
+            .overlay-text {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                color: white;
+                font-size: 24px;
+                font-weight: bold;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <button onclick="downloadImage()">Download Image</button>
+        <input
+            type="file"
+            id="imageInput"
+            accept="image/*"
+            onchange="getImageSize()"
+        />
+
+        <div class="image-container">
+            <img alt="Your Image" id="editable-img" />
+            <div class="overlay-text">Your Overlay Text</div>
+        </div>
+
+        <script>
+            var canvas;
+            var canvasImg = new Image(); // Initialize canvasImg globally
+
+            function downloadImage() {
+                var context = canvas.getContext('2d');
+
+                canvasImg.crossOrigin = 'anonymous';
+
+                canvasImg.onload = function () {
+                    context.drawImage(canvasImg, 0, 0);
+                    context.font = '24px bold';
+                    context.fillStyle = 'white';
+                    context.textAlign = 'center';
+                    context.fillText(
+                        'Your Overlay Text',
+                        canvas.width / 2,
+                        canvas.height / 2
+                    );
+
+                    var link = document.createElement('a');
+                    link.href = canvas.toDataURL('image/png');
+                    link.download = 'image_with_overlay.png';
+                    link.click();
+                };
+            }
+
+            function getImageSize() {
+                var input = document.getElementById('imageInput');
+
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        const img = new Image();
+                        img.src = e.target.result;
+
+                        img.onload = function () {
+                            var width = img.width;
+                            var height = img.height;
+
+                            const canvasImgElement =
+                                document.querySelector('#editable-img');
+                            canvasImgElement.src = e.target.result;
+                            canvasImgElement.style.width = width + 'px';
+                            canvasImgElement.style.height = height + 'px';
+
+                            canvas = document.createElement('canvas');
+                            // canvas.onload = function () {
+                            canvas.width = width;
+                            canvas.height = height;
+                            // };
+
+                            // Set the global canvasImg.src
+                            canvasImg.src = e.target.result;
+                            canvasImg.height = height;
+                            canvasImg.width = width;
+                        };
+                    };
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+        </script>
+    </body>
+</html>
