@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Image with Overlay Text</title>
+        <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+        <style>
+            .imageViewerContainer {
+                position: relative;
+                width: 600px;
+                height: 400px;
+                border: 1px solid black;
+                overflow: auto;
+                background-color: antiquewhite;
+                resize: both;
+            }
+            .imageViewerTextContainer {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                font-size: 24px;
+                font-weight: bold;
+                transform: translate(-50%, -50%);
+                background-color: white;
+                padding: 10px 20px;
+                max-width: 80%;
+            }
+            /* Hide scrollbar for Chrome, Safari and Opera */
+            .scroll::-webkit-scrollbar {
+                display: none;
+            }
+
+            /* Hide scrollbar for IE, Edge and Firefox */
+            .scroll {
+                -ms-overflow-style: none; /* IE and Edge */
+                scrollbar-width: none; /* Firefox */
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Image with Overlay Text</h1>
+
+        <!-- Input for image upload -->
+        <label for="imageUpload">Upload Image:</label>
+        <input
+            type="file"
+            id="imageUpload"
+            accept="image/*"
+            onchange="onImageUpload()"
+        />
+
+        <!-- Input for image viewer -->
+        <div
+            class="imageViewerContainer scroll"
+            onresize="handleResize()"
+            id="resizableContainer"
+        >
+            <div id="imageViewer"></div>
+            <div class="imageViewerTextContainer">
+                <p class="imageViewerText"></p>
+            </div>
+        </div>
+
+        <!-- Input for overlay text -->
+        <label for="overlayText">Overlay Text:</label>
+        <textarea
+            type="text"
+            id="overlayText"
+            placeholder="Enter overlay text"
+            onchange="onOverlayTextChange(this.value)"
+        >
+        </textarea>
+
+        <button onclick="onDownload()">Download Image with Overlay</button>
+        <script>
+            const inputHandler = function (e) {
+                document.querySelector('.imageViewerText').innerText =
+                    e.target.value;
+            };
+            const overlayInput = document.querySelector('#overlayText');
+            overlayInput.addEventListener('input', (e) => inputHandler(e));
+
+            function onImageUpload() {
+                var imageUploadInput = document.getElementById('imageUpload');
+                var imageViewer = document.getElementById('imageViewer');
+
+                if (imageUploadInput.files && imageUploadInput.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        imageViewer.innerHTML = `<img src="${e.target.result}" alt="Uploaded Image" style="width: 100%;"  >`;
+
+                        updateOverlayPreview();
+                    };
+
+                    reader.readAsDataURL(imageUploadInput.files[0]);
+                }
+            }
+
+            function onDownload() {
+                var imageViewer = document.querySelector(
+                    '.imageViewerContainer'
+                );
+
+                html2canvas(imageViewer, {
+                    useCORS: true, // Enable CORS support for external images
+                }).then((canvas) => {
+                    var link = document.createElement('a');
+                    link.href = canvas.toDataURL('image/png');
+                    link.download = 'image_with_overlay.png';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                });
+            }
+            function handleResize() {
+                var container = document.getElementById('resizableContainer');
+                console.log(
+                    'Container resized to width: ' +
+                        container.offsetWidth +
+                        ', height: ' +
+                        container.offsetHeight
+                );
+            }
+        </script>
+    </body>
+</html>

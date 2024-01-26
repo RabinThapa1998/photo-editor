@@ -21,8 +21,11 @@
                 position: absolute;
                 top: 50%;
                 left: 50%;
+                max-width: 70%;
+                padding: 20px;
                 transform: translate(-50%, -50%);
-                color: white;
+                color: black;
+                background-color: white;
                 font-size: 24px;
                 font-weight: bold;
                 text-align: center;
@@ -36,7 +39,7 @@
             accept="image/*"
             onchange="getImageSize()"
         />
-        <input type="text" id="overlay-text-input" />
+        <textarea rows="4" cols="50" id="overlay-text-input"> </textarea>
 
         <div class="image-container">
             <img alt="Your Image" id="editable-img" />
@@ -46,6 +49,8 @@
         <button onclick="downloadImage()">Download Image</button>
 
         <script>
+            const baseFontSize = 24;
+            var aspectRatio;
             var canvas;
             var canvasImg = new Image(); // Initialize canvasImg globally
 
@@ -56,7 +61,8 @@
 
                 canvasImg.onload = function () {
                     context.drawImage(canvasImg, 0, 0);
-                    context.font = '24px bold';
+
+                    context.font = `${baseFontSize * aspectRatio}px` + ' bold';
                     context.fillStyle = 'white';
                     context.textAlign = 'center';
                     const overlayText = document.querySelector(
@@ -91,7 +97,7 @@
                             var height = img.height;
 
                             // Calculate the aspect ratio of the original image
-                            var aspectRatio = width / height;
+                            aspectRatio = width / height;
 
                             const canvasImgElement =
                                 document.querySelector('#editable-img');
