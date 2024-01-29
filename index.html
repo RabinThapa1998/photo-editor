@@ -13,6 +13,22 @@
                 margin: 0;
                 padding: 0;
             }
+            body {
+                max-width: 1200px;
+                margin: auto;
+                margin-top: 100px;
+            }
+
+            button {
+                background-color: black;
+                padding: 10px 20px;
+                border-radius: 50px;
+                color: white;
+                border: none;
+                cursor: pointer;
+                margin: 10px 0px;
+            }
+
             .imageViewerContainer {
                 position: relative;
                 width: 600px;
@@ -45,54 +61,74 @@
                 -ms-overflow-style: none; /* IE and Edge */
                 scrollbar-width: none; /* Firefox */
             }
+
+            article {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
+            article .left-container {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+            }
         </style>
     </head>
     <body>
         <h1>Image with Overlay Text</h1>
 
-        <!-- Input for image upload -->
-        <label for="imageUpload">Upload Image:</label>
-        <input
-            type="file"
-            id="imageUpload"
-            accept="image/*"
-            onchange="onImageUpload()"
-        />
+        <article>
+            <div class="left-container">
+                <!-- Input for image upload -->
+                <label for="imageUpload">Upload Image:</label>
+                <input
+                    type="file"
+                    id="imageUpload"
+                    accept="image/*"
+                    onchange="onImageUpload()"
+                />
 
-        <!-- Input for image viewer -->
-        <div
-            class="imageViewerContainer scroll"
-            onresize="handleResize()"
-            id="resizableContainer"
-        >
-            <div id="imageViewer"></div>
-            <div class="imageViewerTextContainer">
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24px"
-                    height="24px"
-                    version="1.1"
-                    viewBox="0 0 1200 1200"
+                <!-- Input for overlay text -->
+                <label for="overlayText">Overlay Text:</label>
+                <textarea
+                    type="text"
+                    rows="20"
+                    id="overlayText"
+                    placeholder="Enter overlay text"
+                    onchange="onOverlayTextChange(this.value)"
                 >
-                    <path
-                        d="m1137.6 687.6c-15.602-104.4-104.4-178.8-205.2-183.6 25.199-93.602 86.398-130.8 160.8-152.4 7.1992-2.3984 6-9.6016 6-9.6016l-12-74.398s-1.1992-6-10.801-4.8008c-256.8 28.801-430.8 224.4-398.4 462 29.996 164.4 158.39 228 277.2 211.2 118.8-19.199 200.4-129.6 182.4-248.4zm-819.6-183.6c24-93.602 87.602-130.8 160.8-152.4 7.1992-2.3984 6-9.6016 6-9.6016l-10.801-74.398s-1.1992-6-10.801-4.8008c-256.8 27.598-429.6 223.2-399.6 460.8 31.199 165.6 160.8 229.2 278.4 212.4 118.8-19.199 200.4-129.6 181.2-248.4-15.598-105.6-103.2-180-205.2-183.6z"
-                    />
-                </svg>
-                <p class="imageViewerText"></p>
+                </textarea>
             </div>
-        </div>
 
-        <!-- Input for overlay text -->
-        <label for="overlayText">Overlay Text:</label>
-        <textarea
-            type="text"
-            id="overlayText"
-            placeholder="Enter overlay text"
-            onchange="onOverlayTextChange(this.value)"
-        >
-        </textarea>
+            <div class="right-container">
+                <!-- Input for image viewer -->
+                <div
+                    class="imageViewerContainer scroll"
+                    onresize="handleResize()"
+                    id="resizableContainer"
+                >
+                    <div id="imageViewer"></div>
+                    <div class="imageViewerTextContainer">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24px"
+                            height="24px"
+                            version="1.1"
+                            viewBox="0 0 1200 1200"
+                        >
+                            <path
+                                d="m1137.6 687.6c-15.602-104.4-104.4-178.8-205.2-183.6 25.199-93.602 86.398-130.8 160.8-152.4 7.1992-2.3984 6-9.6016 6-9.6016l-12-74.398s-1.1992-6-10.801-4.8008c-256.8 28.801-430.8 224.4-398.4 462 29.996 164.4 158.39 228 277.2 211.2 118.8-19.199 200.4-129.6 182.4-248.4zm-819.6-183.6c24-93.602 87.602-130.8 160.8-152.4 7.1992-2.3984 6-9.6016 6-9.6016l-10.801-74.398s-1.1992-6-10.801-4.8008c-256.8 27.598-429.6 223.2-399.6 460.8 31.199 165.6 160.8 229.2 278.4 212.4 118.8-19.199 200.4-129.6 181.2-248.4-15.598-105.6-103.2-180-205.2-183.6z"
+                            />
+                        </svg>
+                        <p class="imageViewerText"></p>
+                    </div>
+                </div>
 
-        <button onclick="onDownload()">Download Image with Overlay</button>
+                <button onclick="onDownload()">
+                    Download Image with Overlay
+                </button>
+            </div>
+        </article>
         <script>
             const inputHandler = function (e) {
                 document.querySelector('.imageViewerText').innerText =
