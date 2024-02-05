@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Image with Overlay Text</title>
         <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+        <link rel="stylesheet" href="./fonts.css" />
         <style>
             *,
             ::after,
@@ -16,17 +17,18 @@
             body {
                 max-width: 1200px;
                 margin: auto;
-                margin-top: 100px;
+                margin-top: 50px;
+                font-family: 'Eina', sans-serif;
             }
 
             button {
                 background-color: black;
                 padding: 10px 20px;
-                border-radius: 50px;
                 color: white;
                 border: none;
                 cursor: pointer;
-                margin: 10px 0px;
+                margin: 10px auto;
+                font-size: 16px;
             }
 
             .imageViewerContainer {
@@ -72,35 +74,89 @@
                 flex-direction: column;
                 gap: 20px;
             }
+            .left-container .field {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+            }
+            .logo {
+                width: 60px;
+                height: 60px;
+                position: absolute;
+                top: 20px;
+                right: 20px;
+            }
+            input,
+            select,
+            textarea {
+                font-size: 16px;
+                padding: 4px 16px;
+                outline: none;
+            }
         </style>
     </head>
     <body>
-        <h1>Image with Overlay Text</h1>
+        <h1>Veda Image Editor</h1>
 
         <article>
             <div class="left-container">
                 <!-- Input for image upload -->
-                <label for="imageUpload">Upload Image:</label>
-                <input
-                    type="file"
-                    id="imageUpload"
-                    accept="image/*"
-                    onchange="onImageUpload()"
-                />
+                <div class="field">
+                    <label for="imageUpload">Upload Background Image:</label>
+                    <input
+                        type="file"
+                        id="imageUpload"
+                        accept="image/*"
+                        onchange="onImageUpload()"
+                    />
+                </div>
 
                 <!-- Input for overlay text -->
-                <label for="overlayText">Overlay Text:</label>
-                <textarea
-                    type="text"
-                    rows="20"
-                    id="overlayText"
-                    placeholder="Enter overlay text"
-                    onchange="onOverlayTextChange(this.value)"
-                >
-                </textarea>
+                <div class="field">
+                    <label for="overlayText">Overlay Text:</label>
+                    <textarea
+                        type="text"
+                        rows="20"
+                        id="overlayText"
+                        placeholder="Enter overlay text"
+                        onchange="onOverlayTextChange(this.value)"
+                    ></textarea>
+                </div>
 
-                <input name="bgcolor" placeholder="bgcolor" id="bgColor" />
-                <input name="fontSize" placeholder="font size" id="fontSize" />
+                <div class="field">
+                    <label for="bgColor">Background Color:</label>
+                    <input
+                        name="bgcolor"
+                        placeholder="Change Background Color (eg: #067ff4)"
+                        id="bgColor"
+                        value="#067ff4"
+                    />
+                </div>
+                <div class="field">
+                    <label for="fontSize">Font Size:</label>
+                    <input
+                        type="number"
+                        name="fontSize"
+                        placeholder="Change Font Size"
+                        id="fontSize"
+                        value="24"
+                    />
+                </div>
+
+                <div class="field">
+                    <label for="fontFamily">Font Family:</label>
+                    <select name="" id="fontFamily">
+                        <option value="">Select Font</option>
+                        <option value="Eina-300">Eina Light</option>
+                        <option value="Eina-400">Eina Regular</option>
+                        <option value="Eina-700">Eina Bold</option>
+                        <option value="Eina-600">Eina SemiBold</option>
+                        <option value="Lato-400">Lato Regular</option>
+                        <option value="Lato-300">Lato Light</option>
+                        <option value="Lato-800">Lato Bold</option>
+                        <option value="Lato-900">Lato Black</option>
+                    </select>
+                </div>
             </div>
 
             <div class="right-container">
@@ -110,6 +166,7 @@
                     onresize="handleResize()"
                     id="resizableContainer"
                 >
+                    <img src="./logo.png" class="logo" alt="" />
                     <div id="imageViewer"></div>
                     <div class="imageViewerTextContainer">
                         <svg
@@ -155,6 +212,18 @@
             };
             const fontSizeInput = document.querySelector('#fontSize');
             fontSizeInput.addEventListener('input', (e) => fontSizeHandler(e));
+
+            const fontFamilyHandler = function (e) {
+                const [fontFamily, fontWeight] = e.target.value.split('-');
+                document.querySelector('.imageViewerText').style.fontFamily =
+                    fontFamily;
+                document.querySelector('.imageViewerText').style.fontWeight =
+                    fontWeight;
+            };
+            const fontFamilyInput = document.querySelector('#fontFamily');
+            fontFamilyInput.addEventListener('input', (e) =>
+                fontFamilyHandler(e)
+            );
 
             function onImageUpload() {
                 var imageUploadInput = document.getElementById('imageUpload');
