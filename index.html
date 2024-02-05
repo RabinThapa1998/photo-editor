@@ -27,7 +27,7 @@
                 color: white;
                 border: none;
                 cursor: pointer;
-                margin: 10px auto;
+                margin: 10px 0px;
                 font-size: 16px;
             }
 
@@ -86,6 +86,11 @@
                 top: 20px;
                 right: 20px;
                 object-fit: contain;
+            }
+            .right-container {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
             }
             input,
             select,
@@ -158,6 +163,18 @@
                         <option value="Lato-900">Lato Black</option>
                     </select>
                 </div>
+                <div class="field">
+                    <label for="width">width:</label>
+                    <input
+                        type="number"
+                        name="width"
+                        placeholder="Change width"
+                        id="width"
+                        value="60"
+                        min="0"
+                        max="100"
+                    />
+                </div>
             </div>
 
             <div class="right-container">
@@ -185,9 +202,7 @@
                     </div>
                 </div>
 
-                <button onclick="onDownload()">
-                    Download Image with Overlay
-                </button>
+                <button onclick="onDownload()">Download Image</button>
             </div>
         </article>
         <script>
@@ -225,6 +240,14 @@
             fontFamilyInput.addEventListener('input', (e) =>
                 fontFamilyHandler(e)
             );
+
+            const widthHandler = function (e) {
+                document.querySelector(
+                    '.imageViewerTextContainer'
+                ).style.maxWidth = `${e.target.value}%`;
+            };
+            const widthInput = document.querySelector('#width');
+            widthInput.addEventListener('input', (e) => widthHandler(e));
 
             function onImageUpload() {
                 var imageUploadInput = document.getElementById('imageUpload');
