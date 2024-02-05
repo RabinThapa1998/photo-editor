@@ -31,11 +31,11 @@
 
             .imageViewerContainer {
                 position: relative;
-                width: 600px;
-                height: 400px;
+                height: 600px;
+                aspect-ratio: 1 / 1;
                 border: 1px solid black;
                 overflow: auto;
-                background-color: antiquewhite;
+                background-color: #067ff4;
                 resize: both;
             }
             .imageViewerTextContainer {
@@ -98,6 +98,9 @@
                     onchange="onOverlayTextChange(this.value)"
                 >
                 </textarea>
+
+                <input name="bgcolor" placeholder="bgcolor" id="bgColor" />
+                <input name="fontSize" placeholder="font size" id="fontSize" />
             </div>
 
             <div class="right-container">
@@ -136,6 +139,22 @@
             };
             const overlayInput = document.querySelector('#overlayText');
             overlayInput.addEventListener('input', (e) => inputHandler(e));
+
+            const bgColorHandler = function (e) {
+                document.querySelector(
+                    '.imageViewerContainer'
+                ).style.backgroundColor = e.target.value;
+            };
+            const bgColorInput = document.querySelector('#bgColor');
+            bgColorInput.addEventListener('input', (e) => bgColorHandler(e));
+
+            const fontSizeHandler = function (e) {
+                document.querySelector(
+                    '.imageViewerText'
+                ).style.fontSize = `${e.target.value}px`;
+            };
+            const fontSizeInput = document.querySelector('#fontSize');
+            fontSizeInput.addEventListener('input', (e) => fontSizeHandler(e));
 
             function onImageUpload() {
                 var imageUploadInput = document.getElementById('imageUpload');

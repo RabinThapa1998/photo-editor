@@ -1,0 +1,4 @@
+lato, eina--> bold semibold light 
+change background color red : ec1553  blue: 067ff4
+1:1
+fontSize
